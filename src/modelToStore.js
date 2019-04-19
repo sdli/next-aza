@@ -104,7 +104,11 @@ function modelReducersToStore(model,persist) {
             if(namespace === "clear"){
                 switch (actionType){
                     case "all":
-                        return {};
+                        let obj = {};
+                        Object.entries(state).forEach(val=>{
+                            obj[val[0]] = getEmpty(val[1]);
+                        });
+                        return obj;
                     default:
                         return state;
                 }
@@ -212,6 +216,22 @@ function checkNameSpace(action){
     }
 }
 
+
+function getEmpty(type){
+   const tag = Object.prototype.toString.call(type).split(" ")[1].split("]")[0];
+
+   switch (tag){
+       case "Array": return [];
+       case "Object": return {};
+       case "Boolean": return false;
+       case "Number": return 0;
+       case "Function": return null;
+       case "String": return "";
+       default:
+        return null;
+   }
+
+}
 /**
  * 添加loading
  */
